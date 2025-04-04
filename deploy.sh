@@ -8,6 +8,6 @@ echo "📥 Récupération depuis GitHub..."
 git pull origin main
 
 echo "♻️ Redémarrage de PM2..."
-pm2 restart snapshot-cdn
+pm2 restart cdn-backend
 
 echo "✅ Déploiement terminé !"
