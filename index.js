@@ -7,6 +7,7 @@ const app = express();
 // Sert des fichiers statiques (ex : images)
 app.use('/images', express.static('images'));
 
+
 // Certificats
 const options = {
   key: fs.readFileSync('/etc/letsencrypt/live/cdn.snapshotfa.st/privkey.pem'),
