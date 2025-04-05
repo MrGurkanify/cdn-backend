@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Déploiement de snapshot-cdn en cours..."
+echo "🚀 Déploiement de cdn-backend en cours..."
 
 cd /root/cdn-backend || exit
 

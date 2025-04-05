@@ -26,6 +26,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// Express - ping route
+app.get('/ping', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Route POST /upload
 app.post('/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
@@ -50,3 +55,5 @@ const options = {
 https.createServer(options, app).listen(443, () => {
   console.log('🚀 Serveur CDN disponible sur https://cdn.snapshotfa.st');
 });
+
+
