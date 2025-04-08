@@ -42,29 +42,51 @@ app.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// Route POST /upload
-app.post('/upload', upload.single('image'), async (req, res) => {
-  const userId = req.body.userId; // attend que l'app mobile envoie userId
-  if (!userId) {
-    return res.status(400).json({ error: 'userId manquant' });
+// route pour uploader une image avatar
+app.post('/upload/avatar', upload.single('image'), async (req, res) => {
+  const userId = req.body.userId;
+  if (!req.file || !userId) {
+    return res.status(400).json({ error: 'Fichier ou userId manquant' });
   }
 
-  const userDir = path.join(imagesDir, 'snapshot', userId);
-
-  // Crée le dossier s'il n'existe pas
-  if (!fs.existsSync(userDir)) {
-    fs.mkdirSync(userDir, { recursive: true });
+  const destFolder = path.join(imagesDir, 'snapshot', userId, 'avatar');
+  if (!fs.existsSync(destFolder)) {
+    fs.mkdirSync(destFolder, { recursive: true });
   }
 
-  const uniqueName = Date.now() + '-' + req.file.originalname;
-  const destinationPath = path.join(userDir, uniqueName);
+  const uniqueName = `${Date.now()}-${req.file.originalname}`;
+  const destinationPath = path.join(destFolder, uniqueName);
 
-  fs.renameSync(req.file.path, destinationPath); // déplace le fichier temporaire
+  fs.renameSync(req.file.path, destinationPath);
 
-  const fileUrl = `https://cdn.snapshotfa.st/images/snapshot/${userId}/${uniqueName}`;
-  console.log(`🖼️ Image sauvegardée : ${fileUrl}`);
+  const fileUrl = `https://cdn.snapshotfa.st/images/snapshot/${userId}/avatar/${uniqueName}`;
   res.status(200).json({ success: true, fileUrl });
 });
+
+// route pour uploader une image de fournisseur
+app.post('/upload/supplier', upload.single('image'), async (req, res) => {
+  const userId = req.body.userId;
+  if (!req.file || !userId) {
+    return res.status(400).json({ error: 'Fichier ou userId manquant' });
+  }
+
+  const destFolder = path.join(imagesDir, 'snapshot', userId, 'suppliers');
+  if (!fs.existsSync(destFolder)) {
+    fs.mkdirSync(destFolder, { recursive: true });
+  }
+
+  const uniqueName = `${Date.now()}-${req.file.originalname}`;
+  const destinationPath = path.join(destFolder, uniqueName);
+
+  fs.renameSync(req.file.path, destinationPath);
+
+  const fileUrl = `https://cdn.snapshotfa.st/images/snapshot/${userId}/suppliers/${uniqueName}`;
+  res.status(200).json({ success: true, fileUrl });
+});
+
+
+
+
 
 
 // Sert les images statiques
