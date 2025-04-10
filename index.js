@@ -106,7 +106,7 @@ app.post('/upload/product', upload.single('image'), async (req, res) => {
 });
 
 // suppresion du supplier et de son dossier
-app.post('/delete/supplier', express.json(), async (req, res) => {
+app.post('/delete/supplier', async (req, res) => {
   const { userId, supplierId } = req.body;
 
   if (!userId || !supplierId) {
@@ -147,6 +147,8 @@ app.delete('/delete/snapshot/:userId/:supplierId', (req, res) => {
 
 // Sert les fichiers statiques
 app.use('/images', express.static(imagesDir));
+app.use(express.json());
+
 
 // Certificats SSL Let's Encrypt
 const options = {
