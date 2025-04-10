@@ -37,6 +37,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+app.use(express.json());
+
+
 // Simple route ping
 app.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -147,7 +150,6 @@ app.delete('/delete/snapshot/:userId/:supplierId', (req, res) => {
 
 // Sert les fichiers statiques
 app.use('/images', express.static(imagesDir));
-app.use(express.json());
 
 
 // Certificats SSL Let's Encrypt
