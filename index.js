@@ -105,6 +105,30 @@ app.post('/upload/product', upload.single('image'), async (req, res) => {
   res.status(200).json({ success: true, fileUrl });
 });
 
+// suppresion du supplier et de son dossier
+app.post('/delete/supplier', express.json(), async (req, res) => {
+  const { userId, supplierId } = req.body;
+
+  if (!userId || !supplierId) {
+    return res.status(400).json({ error: 'userId ou supplierId manquant' });
+  }
+
+  const targetDir = path.join(imagesDir, 'snapshot', userId, supplierId);
+
+  try {
+    if (fs.existsSync(targetDir)) {
+      fs.rmSync(targetDir, { recursive: true, force: true });
+      console.log('🧹 Dossier images supplier supprimé :', targetDir);
+    }
+    return res.status(200).json({ success: true });
+  } catch (e) {
+    console.error('❌ Erreur suppression supplier CDN :', e);
+    return res.status(500).json({ error: 'Erreur suppression supplier CDN' });
+  }
+});
+
+
+
 // Sert les fichiers statiques
 app.use('/images', express.static(imagesDir));
 
