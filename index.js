@@ -128,6 +128,22 @@ app.post('/delete/supplier', express.json(), async (req, res) => {
 });
 
 
+app.delete('/delete/snapshot/:userId/:supplierId', (req, res) => {
+  const { userId, supplierId } = req.params;
+
+  const folderPath = path.join(imagesDir, 'snapshot', userId, supplierId);
+
+  if (fs.existsSync(folderPath)) {
+    fs.rmSync(folderPath, { recursive: true, force: true });
+    return res.status(200).json({ success: true, message: 'Dossier supprimé avec succès.' });
+  } else {
+    return res.status(404).json({ error: 'Dossier introuvable.' });
+  }
+});
+
+
+
+
 
 // Sert les fichiers statiques
 app.use('/images', express.static(imagesDir));
