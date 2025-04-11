@@ -144,6 +144,39 @@ app.delete('/delete/snapshot/:userId/:supplierId', (req, res) => {
   }
 });
 
+// 🔥 Suppression des images liées à un produit spécifique
+app.post('/delete/product', async (req, res) => {
+  const { userId, supplierId, productId } = req.body;
+
+  if (!userId || !supplierId || !productId) {
+    return res.status(400).json({ error: 'userId, supplierId ou productId manquant' });
+  }
+
+  const productFolder = path.join(imagesDir, 'snapshot', userId, supplierId, 'products');
+
+  try {
+    if (fs.existsSync(productFolder)) {
+      // Lister tous les fichiers du dossier
+      const files = fs.readdirSync(productFolder);
+
+      // Filtrer les fichiers contenant le productId dans leur nom
+      const productFiles = files.filter(file => file.includes(productId));
+
+      // Supprimer chaque fichier correspondant
+      productFiles.forEach(file => {
+        const filePath = path.join(productFolder, file);
+        fs.unlinkSync(filePath);
+      });
+
+      console.log(`🧹 Fichiers du produit ${productId} supprimés dans ${productFolder}`);
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('❌ Erreur suppression fichiers produit :', err);
+    return res.status(500).json({ error: 'Erreur suppression fichiers produit' });
+  }
+});
 
 
 
@@ -162,3 +195,4 @@ const options = {
 https.createServer(options, app).listen(443, () => {
   console.log('🚀 Serveur CDN actif sur https://cdn.snapshotfa.st');
 });
+
